@@ -47,7 +47,7 @@ router.get('/files', (req, res) => {
     columns.push({ key, columnName: data['0'][key].v, type });
   }
 
-  res.send(columns);
+  res.send(data);
 });
 
 router.get('/createFake', () => {

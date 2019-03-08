@@ -3,18 +3,16 @@ import ColumnList from './ColumnList';
 import Graph from './Graph';
 import BarGraph from './BarGraph';
 import { List, ListItem, ListItemText, Button } from '@material-ui/core';
+import KpiViewer from './KpiViewer';
 
 class Dashboard extends Component {
   state = {
     displays: [],
     selectedNewGraph: ''
   };
-  componentDidMount() {
-    // this.fetchColumns();
-  }
+  componentDidMount() {}
 
   handleOnCreate = () => {
-    // this.fetchData();
     const graphs = this.state.displays.slice(0);
     graphs.push(this.state.selectedNewGraph);
     this.setState({ displays: graphs, selectedNewGraph: '' });
@@ -25,12 +23,24 @@ class Dashboard extends Component {
       selectedNewGraph: graph
     });
   };
+
+  returnGraph = display => {
+    switch (display) {
+      case 'Bar':
+        return <BarGraph />;
+      case 'KPI':
+        return <KpiViewer />;
+      default:
+        return null;
+    }
+  };
+
   render() {
     const { displays, selectedNewGraph } = this.state;
-    const typeOfGraphs = ['Bar', 'Total'];
+    const typeOfGraphs = ['Bar', 'KPI'];
     return (
       <div>
-        {displays.map(display => (display === 'Bar' ? <BarGraph /> : null))}
+        {displays.map(display => this.returnGraph(display))}
         <List className="columns">
           {typeOfGraphs.map(graph => (
             <ListItem

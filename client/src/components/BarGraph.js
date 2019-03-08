@@ -49,7 +49,20 @@ class BarGraph extends Component {
     const { columns, selectedColumns, data } = this.state;
 
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: '80% 20%' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '20% 80%',
+          alignItems: 'center',
+          height: '450px'
+        }}
+      >
+        <ColumnList
+          columns={columns}
+          selectedColumns={selectedColumns}
+          handleListItemClick={this.handleListItemClick}
+          handleOnSave={this.handleOnSave}
+        />
         {data && (
           <ResponsiveBar
             width={900}
@@ -69,6 +82,7 @@ class BarGraph extends Component {
             labelSkipWidth={16}
             labelSkipHeight={16}
             groupMode="grouped"
+            colorBy="index"
             legends={[
               {
                 dataFrom: 'keys',
@@ -95,12 +109,6 @@ class BarGraph extends Component {
             ]}
           />
         )}
-        <ColumnList
-          columns={columns}
-          selectedColumns={selectedColumns}
-          handleListItemClick={this.handleListItemClick}
-          handleOnSave={this.handleOnSave}
-        />
       </div>
     );
   }
