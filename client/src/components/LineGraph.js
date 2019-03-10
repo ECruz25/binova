@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveLine } from "@nivo/line";
 import ColumnList from "./ColumnList";
 import { Button } from "@material-ui/core";
 
-class BarGraph extends Component {
+class LineGraph extends Component {
   state = {
     columns: [],
     selectedColumns: {},
@@ -28,8 +28,7 @@ class BarGraph extends Component {
   fetchData = async () => {
     try {
       const { selectedColumns, legend, value } = this.state;
-      debugger;
-      const response = await fetch("/getGroupedForBarGraph", {
+      const response = await fetch("/getGroupedForLineGraph", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
@@ -37,26 +36,14 @@ class BarGraph extends Component {
         method: "POST",
         body: JSON.stringify({ legend, value })
       });
-      const jsonresponse = await response.json();
-      const data = Object.keys(jsonresponse).map(c => ({
-        tal: c,
-        [c]: jsonresponse[c]
-      }));
-      debugger;
-
-      const keys = Object.keys(jsonresponse);
-      console.log(data);
-      this.setState({ data, keys });
+      const data = await response.json();
+      this.setState({ data });
     } catch (error) {
       console.log(error);
     }
   };
 
   handleOnSave = () => {
-    this.fetchData();
-  };
-
-  handleUpdate = () => {
     this.fetchData();
   };
 
@@ -67,16 +54,14 @@ class BarGraph extends Component {
     }, 5000);
   }
 
-  handleListItemClick = columnKey => {
-    this.setState({
-      selectedColumns: { [columnKey]: true }
-    });
-  };
-
   handleListItemClickLegend = key => {
     this.setState({
       legend: key
     });
+  };
+
+  handleUpdate = () => {
+    this.fetchData();
   };
 
   handleListItemClickValue = key => {
@@ -85,14 +70,14 @@ class BarGraph extends Component {
     });
   };
 
+  handleListItemClick = columnKey => {
+    this.setState({
+      selectedColumns: { [columnKey]: true }
+    });
+  };
+
   render() {
-    const {
-      selectedColumns,
-      data,
-      intColumns,
-      stringColumns,
-      keys
-    } = this.state;
+    const { selectedColumns, data, intColumns, stringColumns } = this.state;
 
     return (
       <div className="dashboard-item">
@@ -129,48 +114,54 @@ class BarGraph extends Component {
           </div>
         </div>
         {data && (
-          <ResponsiveBar
-            width={450}
-            height={250}
+          <ResponsiveLine
+            data={[data]}
             margin={{
-              top: 60,
-              right: 120,
-              bottom: 60,
-              left: 80
+              top: 50,
+              right: 110,
+              bottom: 50,
+              left: 60
             }}
-            colors="accent"
-            data={data}
-            indexBy="tal"
-            keys={keys}
-            labelTextColor="inherit:darker(1.4)"
-            labelSkipWidth={16}
-            labelSkipHeight={16}
-            groupMode="stacked"
-            colorBy="index"
-            legends={[
-              {
-                dataFrom: "keys",
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 100,
-                itemHeight: 20,
-                itemDirection: "left-to-right",
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemOpacity: 1
-                    }
-                  }
-                ]
-              }
-            ]}
+            xScale={{
+              type: "point"
+            }}
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+              orient: "bottom",
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: "prod",
+              legendOffset: 36,
+              legendPosition: "middle"
+            }}
+            axisLeft={{
+              orient: "left",
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: "total",
+              legendOffset: -40,
+              legendPosition: "middle"
+            }}
+            yScale={{
+              type: "linear",
+              stacked: true,
+              min: "auto",
+              max: "auto"
+            }}
+            dotSize={10}
+            dotColor="inherit:darker(0.3)"
+            dotBorderWidth={2}
+            dotBorderColor="#ffffff"
+            enableDotLabel={true}
+            dotLabel="y"
+            dotLabelYOffset={-12}
+            motionStiffness={90}
+            motionDamping={15}
+            height={250}
+            width={450}
           />
         )}
       </div>
@@ -178,4 +169,4 @@ class BarGraph extends Component {
   }
 }
 
-export default BarGraph;
+export default LineGraph;

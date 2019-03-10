@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { ResponsiveBar } from '@nivo/bar';
-import LoadingHOC from './HOC/LoadingHOC';
+import React, { Component } from "react";
+import { ResponsiveBar } from "@nivo/bar";
+import LoadingHOC from "./HOC/LoadingHOC";
 
 class Graph extends Component {
   render() {
     return (
       <div className="graphs">
-        {this.props.type === 'bar' && (
+        {this.props.type === "bar" && (
           <ResponsiveBar
-            width={900}
+            width={1300}
             height={500}
             margin={{
               top: 60,
@@ -27,21 +27,21 @@ class Graph extends Component {
             groupMode="grouped"
             legends={[
               {
-                dataFrom: 'keys',
-                anchor: 'bottom-right',
-                direction: 'column',
+                dataFrom: "keys",
+                anchor: "bottom-right",
+                direction: "column",
                 justify: false,
                 translateX: 120,
                 translateY: 0,
                 itemsSpacing: 2,
                 itemWidth: 100,
                 itemHeight: 20,
-                itemDirection: 'left-to-right',
+                itemDirection: "left-to-right",
                 itemOpacity: 0.85,
                 symbolSize: 20,
                 effects: [
                   {
-                    on: 'hover',
+                    on: "hover",
                     style: {
                       itemOpacity: 1
                     }
@@ -55,4 +55,4 @@ class Graph extends Component {
     );
   }
 }
-export default LoadingHOC('data')(Graph);
+export default LoadingHOC("data")(Graph);

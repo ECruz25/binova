@@ -1,10 +1,21 @@
-import React, { Component } from 'react';
-import { List, ListItem, ListItemText, Button } from '@material-ui/core';
+import React, { Component } from "react";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  TextField,
+  MenuItem
+} from "@material-ui/core";
 
 class Dashboard extends Component {
-  handleListItemClick = (event, columnKey) => {
+  state = {
+    col: ""
+  };
+  handleListItemClick = ev => {
     const { handleListItemClick } = this.props;
-    handleListItemClick(columnKey);
+    this.setState({ col: ev.target.value });
+    handleListItemClick(ev.target.value);
   };
 
   handleOnSave = () => {
@@ -12,31 +23,30 @@ class Dashboard extends Component {
     handleOnSave();
   };
 
+  handleOnRemove = () => {
+    const { handleOnRemove } = this.props;
+  };
+
   render() {
-    const { columns, selectedColumns } = this.props;
+    const { columns, label } = this.props;
     return (
       <div>
-        <List className="columns">
-          {columns.map(column => (
-            <ListItem
-              key={column.key}
-              className="x"
-              selected={selectedColumns[column.key]}
-              onClick={event => this.handleListItemClick(event, column.key)}
-              button
-            >
-              <ListItemText primary={column.columnName} />
-            </ListItem>
-          ))}
-        </List>
-        <Button
+        <TextField
+          id="outlined-select-currency"
+          select
+          label={label}
+          style={{ width: "150px" }}
+          value={this.state.col}
+          onChange={this.handleListItemClick}
+          margin="normal"
           variant="outlined"
-          size="medium"
-          color="primary"
-          onClick={this.handleOnSave}
         >
-          Save
-        </Button>
+          {columns.map(option => (
+            <MenuItem key={option.key} value={option.key}>
+              {option.columnName}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
     );
   }
